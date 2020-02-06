@@ -9,7 +9,7 @@ let currentFilter
 //get stream
 navigator.mediaDevices.getUserMedia({ video: true, audio: true })
     .then(stream => {
-        socket.emit('NewClient')
+        //socket.emit('NewClient')
         video.srcObject = stream
         video.play()
 
