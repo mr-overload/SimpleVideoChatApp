@@ -1,15 +1,32 @@
+import { getCookie, generateUserId } from './utils';
+
+let call_id = null;
+let user_id = generateUserId();
+
+// Get call_id from cookie if available.
+call_id = getCookie('call_id');
+if (call_id === "") {
+    call_id = null;
+}
 
 let Peer = require('simple-peer')
-let socket = io()
+// let socket = io.connect('http://localhost:8080', { query: `user_id=${user_id}&call_id=${call_id}` })
+// let socket = io.connect('http://localhost:8080', { query: "foo=bar" })
+let socket = io.connect({ autoConnect: false });
 const video = document.querySelector('video')
 const filter = document.querySelector('#filter')
 const checkboxTheme = document.querySelector('#theme')
 let client = {}
 let currentFilter
+
+socket.emit('NewClient', { user_id, call_id });
+
 //get stream
 navigator.mediaDevices.getUserMedia({ video: true, audio: true })
     .then(stream => {
-        socket.emit('NewClient')
+        // socket.emit('NewClient', { user_id, call_id });
+        socket.emit('dummy', { user_id, call_id });
+        alert("dummy : ");
         video.srcObject = stream
         video.play()
 
@@ -129,8 +146,7 @@ checkboxTheme.addEventListener('click', () => {
             document.querySelector('#muteText').style.color = "#212529"
         }
     }
-}
-)
+})
 
 function CreateDiv() {
     let div = document.createElement('div')
